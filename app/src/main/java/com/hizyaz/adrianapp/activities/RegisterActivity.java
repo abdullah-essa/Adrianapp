@@ -13,9 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adrianapp.R;
-import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.hizyaz.adrianapp.Config.Constants;
@@ -47,16 +49,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
 
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextUsername = (EditText) findViewById(R.id.editTextUsername);
-        editTextFullname = (EditText) findViewById(R.id.editTextFullname);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        editTextConfirmPassword = (EditText) findViewById(R.id.editTextConfirmPassword);
-        editTextContact = (EditText) findViewById(R.id.editTextContact);
+        editTextEmail = findViewById(R.id.editTextEmail);
+        editTextUsername = findViewById(R.id.editTextUsername);
+        editTextFullname = findViewById(R.id.editTextFullname);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
+        editTextContact = findViewById(R.id.editTextContact);
 
-        textViewLogin = (TextView) findViewById(R.id.textViewLogin);
+        textViewLogin = findViewById(R.id.textViewLogin);
 
-        buttonRegister = (Button) findViewById(R.id.buttonRegister);
+        buttonRegister = findViewById(R.id.buttonRegister);
 
         progressDialog = new ProgressDialog(this);
 
@@ -123,7 +125,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         progressDialog.dismiss();
 
                         try {
-                            JSONObject obj = new JSONObject(response.toString());
+                            JSONObject obj = new JSONObject(response);
                             Log.e("msg", obj.getString("message"));
                             String message = obj.getString("message");
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
@@ -134,7 +136,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             }
                             else
                             {
-                                TextView textViewResponse = (TextView) findViewById(R.id.textViewResponse);
+                                TextView textViewResponse = findViewById(R.id.textViewResponse);
                                 textViewResponse.setText(message);
                             }
                         } catch (JSONException e) {
@@ -145,12 +147,49 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        progressDialog.hide();
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                        NetworkResponse networkResponse = error.networkResponse;
+                        String errorMessage = "Unknown error";
+                        if (networkResponse == null) {
+                            if (error.getClass().equals(TimeoutError.class)) {
+                                errorMessage = "Request timeout";
+                            } else if (error.getClass().equals(NoConnectionError.class)) {
+                                errorMessage = "Failed to connect server";
+                            }
+                        } else {
+                            String result = new String(networkResponse.data);
+                            try {
+                                JSONObject response = new JSONObject(result);
+                                String status = response.getString("status");
+                                String message = response.getString("message");
+
+                                Log.e("Error Status", status);
+                                Log.e("Error Message", message);
+
+                                if (networkResponse.statusCode == 404) {
+                                    errorMessage = "Resource not found";
+                                } else if (networkResponse.statusCode == 401) {
+                                    errorMessage = message+" Please login again";
+                                } else if (networkResponse.statusCode == 400) {
+                                    errorMessage = message+ " Check your inputs";
+                                } else if (networkResponse.statusCode == 500) {
+                                    errorMessage = message+" Something is getting wrong";
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        progressDialog.dismiss();
+                        Toast.makeText(
+                                getApplicationContext(),
+                                errorMessage,
+                                Toast.LENGTH_LONG
+                        ).show();
+                        error.printStackTrace();
+
                     }
                 }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("username", username);
                 params.put("email", email);

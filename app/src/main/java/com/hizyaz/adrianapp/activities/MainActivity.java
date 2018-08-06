@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,9 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adrianapp.R;
-import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.hizyaz.adrianapp.Config.Constants;
@@ -48,13 +51,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        editTextUsername = (EditText) findViewById(R.id.editTextUsername);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        textViewForgotPassword = (TextView) findViewById(R.id.textViewForgotPassword);
-        textViewRegister = (TextView) findViewById(R.id.textViewRegister);
-        textViewLogin = (TextView) findViewById(R.id.textViewLogin);
-        buttonLogin = (Button) findViewById(R.id.buttonLogin);
-        buttonForgotPassword = (Button) findViewById(R.id.buttonForgotPassword);
+        editTextUsername = findViewById(R.id.editTextUsername);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        textViewForgotPassword = findViewById(R.id.textViewForgotPassword);
+        textViewRegister = findViewById(R.id.textViewRegister);
+        textViewLogin = findViewById(R.id.textViewLogin);
+        buttonLogin = findViewById(R.id.buttonLogin);
+        buttonForgotPassword = findViewById(R.id.buttonForgotPassword);
 
 
 
@@ -82,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
     private boolean validateForgotPasswordInput() {
-        EditText editTextForgotPassEmail = (EditText) findViewById(R.id.editTextForgotPassEmail);
+        EditText editTextForgotPassEmail = findViewById(R.id.editTextForgotPassEmail);
         email = editTextForgotPassEmail.getText().toString().trim();
         if (TextUtils.isEmpty(email)) {
             editTextForgotPassEmail.setError("Your Valid Email is required");
@@ -109,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                            Log.e("ID", String.valueOf(obj2.getId()));
 //                            Log.e("Username", obj2.getUsername());
 //                            Log.e("Email", obj2.getEmail());
-                            JSONObject obj = new JSONObject(response.toString());
+                            JSONObject obj = new JSONObject(response);
 //                            Log.e("USER DATA", obj.toString());
 
                             if(obj.getBoolean("response")){
@@ -149,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
         ){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("username", username);
                 params.put("password", password);
@@ -171,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onResponse(String response) {
                         progressDialog.dismiss();
                         try {
-                            JSONObject obj = new JSONObject(response.toString());
+                            JSONObject obj = new JSONObject(response);
                             Toast.makeText(
                                     getApplicationContext(),
                                     obj.getString("message"),
@@ -188,18 +191,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        progressDialog.dismiss();
+                        NetworkResponse networkResponse = error.networkResponse;
+                        String errorMessage = "Unknown error";
+                        if (networkResponse == null) {
+                            if (error.getClass().equals(TimeoutError.class)) {
+                                errorMessage = "Request timeout";
+                            } else if (error.getClass().equals(NoConnectionError.class)) {
+                                errorMessage = "Failed to connect server";
+                            }
+                        } else {
+                            String result = new String(networkResponse.data);
+                            try {
+                                JSONObject response = new JSONObject(result);
+                                String status = response.getString("status");
+                                String message = response.getString("message");
 
+                                Log.e("Error Status", status);
+                                Log.e("Error Message", message);
+
+                                if (networkResponse.statusCode == 404) {
+                                    errorMessage = "Resource not found";
+                                } else if (networkResponse.statusCode == 401) {
+                                    errorMessage = message+" Please login again";
+                                } else if (networkResponse.statusCode == 400) {
+                                    errorMessage = message+ " Check your inputs";
+                                } else if (networkResponse.statusCode == 500) {
+                                    errorMessage = message+" Something is getting wrong";
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        progressDialog.dismiss();
                         Toast.makeText(
                                 getApplicationContext(),
-                                error.getMessage(),
+                                errorMessage,
                                 Toast.LENGTH_LONG
                         ).show();
+                        error.printStackTrace();
+
                     }
                 }
         ){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("email", email);
                 return params;
@@ -240,16 +275,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showLoginLayout() {
         textViewForgotPassword.setVisibility(View.VISIBLE);
-        forgetPasswordLayout = (LinearLayout) findViewById(R.id.forgetPasswordLayout);
-        loginLayout = (LinearLayout) findViewById(R.id.loginLayout);
+        forgetPasswordLayout = findViewById(R.id.forgetPasswordLayout);
+        loginLayout = findViewById(R.id.loginLayout);
         forgetPasswordLayout.setVisibility(View.GONE);
         loginLayout.setVisibility(View.VISIBLE);
     }
 
     private void showForgotPasswordLayout() {
         textViewForgotPassword.setVisibility(View.INVISIBLE);
-        forgetPasswordLayout = (LinearLayout) findViewById(R.id.forgetPasswordLayout);
-        loginLayout = (LinearLayout) findViewById(R.id.loginLayout);
+        forgetPasswordLayout = findViewById(R.id.forgetPasswordLayout);
+        loginLayout = findViewById(R.id.loginLayout);
         forgetPasswordLayout.setVisibility(View.VISIBLE);
         loginLayout.setVisibility(View.GONE);
     }

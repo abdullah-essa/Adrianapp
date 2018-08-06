@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adrianapp.R;
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
@@ -59,21 +58,21 @@ public class ProfileActivity extends AppCompatActivity
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         progressDialog = new ProgressDialog(this);
-        buttonUpdate = (Button) findViewById(R.id.buttonUpdate);
+        buttonUpdate = findViewById(R.id.buttonUpdate);
 
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextUsername = (EditText) findViewById(R.id.editTextUsername);
-        editTextFullname = (EditText) findViewById(R.id.editTextFullname);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        editTextConfirmPassword = (EditText) findViewById(R.id.editTextConfirmPassword);
-        editTextContact = (EditText) findViewById(R.id.editTextContact);
+        editTextEmail = findViewById(R.id.editTextEmail);
+        editTextUsername = findViewById(R.id.editTextUsername);
+        editTextFullname = findViewById(R.id.editTextFullname);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
+        editTextContact = findViewById(R.id.editTextContact);
 
         editTextUsername.setText(SharedPrefManager.getInstance(this).getUsername());
         editTextEmail.setText(SharedPrefManager.getInstance(this).getUserEmail());
@@ -232,7 +231,7 @@ public class ProfileActivity extends AppCompatActivity
                             }
                             else
                             {
-                                TextView textViewResponse = (TextView) findViewById(R.id.textViewResponse);
+                                TextView textViewResponse = findViewById(R.id.textViewResponse);
                                 textViewResponse.setText(message);
                             }
                         } catch (JSONException e) {
@@ -280,13 +279,12 @@ public class ProfileActivity extends AppCompatActivity
                                 errorMessage,
                                 Toast.LENGTH_LONG
                         ).show();
-//                        Log.i("Error", errorMessage);
                         error.printStackTrace();
 
                     }
                 }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 Log.e("id",SharedPrefManager.getInstance(getApplicationContext()).getUserid());
                 Log.e("email",email);
