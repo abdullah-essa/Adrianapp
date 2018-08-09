@@ -6,4 +6,6 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="app_bar_vertical_margin">85dp</dimen>
+    <dimen name="padding">16dp</dimen>
+    <dimen name="nav_header_height_custom">140dp</dimen>
 </resources>

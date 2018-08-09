@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 public class SharedPrefManager {
 
     private static SharedPrefManager mInstance;
-    private static Context mCtx;
+    private Context mCtx;
 
     private static final String SHARED_PREF_NAME = "mysharedpref12";
     private static final String KEY_USERNAME = "username";
@@ -29,7 +29,7 @@ public class SharedPrefManager {
         return mInstance;
     }
 
-    public boolean userLogin(int id, String username, String fullname, String contact, String email){
+    public void userLogin(int id, String username, String fullname, String contact, String email){
 
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -42,15 +42,12 @@ public class SharedPrefManager {
 
         editor.apply();
 
-        return true;
+//        return true;
     }
 
     public boolean isLoggedIn(){
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        if(sharedPreferences.getString(KEY_USERNAME, null) != null){
-            return true;
-        }
-        return false;
+        return sharedPreferences.getString(KEY_USERNAME, null) != null;
     }
 
     public boolean logout(){

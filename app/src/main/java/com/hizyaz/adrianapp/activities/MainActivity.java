@@ -23,7 +23,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.hizyaz.adrianapp.Config.Constants;
 import com.hizyaz.adrianapp.models.SharedPrefManager;
-import com.hizyaz.adrianapp.utils.GlobalVariables;
 import com.hizyaz.adrianapp.utils.VolleySingleton;
 
 import org.json.JSONException;
@@ -33,7 +32,6 @@ import java.util.HashMap;
 import java.util.Map;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private GlobalVariables globalv;
     private EditText editTextUsername, editTextPassword;
     private Button buttonLogin,buttonForgotPassword;
     private TextView textViewRegister,textViewForgotPassword,textViewLogin;
@@ -43,13 +41,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        globalv = (GlobalVariables) getApplicationContext();
+
         if(SharedPrefManager.getInstance(this).isLoggedIn()){
-            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            startActivity(new Intent(MainActivity.this, VideosActivity.class));
             finish();
             return;
         }
+        setContentView(R.layout.activity_main);
 
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
@@ -105,13 +103,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onResponse(String response) {
                         progressDialog.dismiss();
                         try {
-                            //new String(response.data)
-//                            Log.e("USER DATA", response);
-//                            AuthVars obj2 = new Gson().fromJson(response, AuthVars.class);
-//                            Log.e("USER DATA Gson", obj2.toString());
-//                            Log.e("ID", String.valueOf(obj2.getId()));
-//                            Log.e("Username", obj2.getUsername());
-//                            Log.e("Email", obj2.getEmail());
                             JSONObject obj = new JSONObject(response);
 //                            Log.e("USER DATA", obj.toString());
 
@@ -124,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                 obj.getString("contact"),
                                                 obj.getString("email")
                                         );
-                                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                                startActivity(new Intent(MainActivity.this, VideosActivity.class));
                                 finish();
                             }else{
                                 Toast.makeText(
@@ -192,12 +183,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         NetworkResponse networkResponse = error.networkResponse;
-                        String errorMessage = "Unknown error";
+                        String errorMessage = getString(R.string.alert_unkown_error);
                         if (networkResponse == null) {
                             if (error.getClass().equals(TimeoutError.class)) {
-                                errorMessage = "Request timeout";
+                                errorMessage = getString(R.string.alert_request_timeout);
                             } else if (error.getClass().equals(NoConnectionError.class)) {
-                                errorMessage = "Failed to connect server";
+                                errorMessage = getString(R.string.alert_failed_connection_to_server);
                             }
                         } else {
                             String result = new String(networkResponse.data);
@@ -210,13 +201,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 Log.e("Error Message", message);
 
                                 if (networkResponse.statusCode == 404) {
-                                    errorMessage = "Resource not found";
+                                    errorMessage = getString(R.string.alert_resource_not_found);
                                 } else if (networkResponse.statusCode == 401) {
-                                    errorMessage = message+" Please login again";
+                                    errorMessage = message + getString(R.string.stm_login_again);
                                 } else if (networkResponse.statusCode == 400) {
-                                    errorMessage = message+ " Check your inputs";
+                                    errorMessage = message + getString(R.string.stm_check_your_inputs);
                                 } else if (networkResponse.statusCode == 500) {
-                                    errorMessage = message+" Something is getting wrong";
+                                    errorMessage = message + getString(R.string.stm_its_getting_wrong);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
