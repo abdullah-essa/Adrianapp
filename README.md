@@ -1,2 +1,2 @@
 # Adrianapp
-First Draft of Adrian App - Authentication Classes Finished
+Android app for uploading videos and managing users accounts
