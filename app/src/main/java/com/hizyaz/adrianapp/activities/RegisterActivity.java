@@ -62,7 +62,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_back_24dp);
         actionbar.setTitle("Registration");
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffff8800));
+//        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffff8800));
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
+
+
+//        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+//        AdView mAdView = findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
 
 
         editTextEmail = findViewById(R.id.editTextEmail);

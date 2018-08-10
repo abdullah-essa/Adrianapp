@@ -1,17 +1,16 @@
 package com.hizyaz.adrianapp.activities;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -24,7 +23,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.MediaController;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -64,14 +62,15 @@ import static com.hizyaz.adrianapp.utils.AppHelper.isEmailValid;
 public class UploadVideoActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private static final int SELECT_VIDEO = 3;
-    private ProgressDialog progressDialog;
+//    private ProgressDialog progressDialog;
+private static final int STORAGE_PERMISSION_CODE = 123;
 
     //edittext for getting the tags input
     TextView textViewResponse;
     private String selectedPath,title,deliver_date,email;
     private VideoView videoView;
     private EditText editTextTitle, editTextDeliveryDate, editTextEmail;
-    ProgressBar progressBar;
+//    ProgressBar progressBar;
     Button buttonUpload;
 
     @Override
@@ -81,10 +80,17 @@ public class UploadVideoActivity extends AppCompatActivity implements DatePicker
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_back_24dp);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffff8800));
+//        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffff8800));
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
 
-        progressDialog = new ProgressDialog(this);
-        progressBar = new ProgressBar(this);
+
+//        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+//        AdView mAdView = findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
+
+//        progressDialog = new ProgressDialog(this);
+//        progressBar = new ProgressBar(this);
 
         //initializing views
         videoView = findViewById(R.id.videoView);
@@ -97,15 +103,16 @@ public class UploadVideoActivity extends AppCompatActivity implements DatePicker
         //checking the permission
         //if the permission is not given we will open setting to add permission
         //else app will not open
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.parse("package:" + getPackageName()));
-            finish();
-            startActivity(intent);
-            return;
-        }
+        requestStoragePermission();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this,
+//                Manifest.permission.READ_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+//                    Uri.parse("package:" + getPackageName()));
+//            finish();
+//            startActivity(intent);
+//            return;
+//        }
 
         //adding click listener to button
         buttonUpload.setOnClickListener(new View.OnClickListener() {
@@ -156,6 +163,41 @@ public class UploadVideoActivity extends AppCompatActivity implements DatePicker
         );
         dpd.setVersion(DatePickerDialog.Version.VERSION_2);
         dpd.show(getFragmentManager(), "Datepickerdialog2");
+    }
+    private void requestStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+            return;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this,
+//                Manifest.permission.READ_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED) {
+//
+//        }
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            //If the user has denied the permission previously your code will come to this block
+            //Here you can explain why you need this permission
+            //Explain here why you need this permission
+        }
+        //And finally ask for the permission
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+    }
+    //This method will be called when the user will tap on allow or deny
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        //Checking the request code of our request
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+
+            //If permission is granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //Displaying a toast
+                Toast.makeText(this, "Permission granted now you can read the storage", Toast.LENGTH_LONG).show();
+            } else {
+                //Displaying another toast if permission is not granted
+                Toast.makeText(this, "Oops you just denied the permission", Toast.LENGTH_LONG).show();
+                requestStoragePermission();
+            }
+        }
     }
 
     @Override
@@ -232,6 +274,7 @@ public class UploadVideoActivity extends AppCompatActivity implements DatePicker
                 new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {
+                        hideProgress();
                         try {
                             JSONObject obj = new JSONObject(new String(response.data));
                             Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
@@ -277,7 +320,8 @@ public class UploadVideoActivity extends AppCompatActivity implements DatePicker
                                 e.printStackTrace();
                             }
                         }
-                        progressDialog.dismiss();
+                        hideProgress();
+//                        progressDialog.dismiss();
                         Toast.makeText(
                                 UploadVideoActivity.this,
                                 errorMessage,
@@ -324,8 +368,17 @@ public class UploadVideoActivity extends AppCompatActivity implements DatePicker
         volleyMultipartRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         //adding the request to volley
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(volleyMultipartRequest);
+        textViewResponse.setVisibility(View.INVISIBLE);
+        showProgress();
     }
-
+    public void showProgress()
+    {
+        findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+    }
+    public void hideProgress()
+    {
+        findViewById(R.id.progressBar).setVisibility(View.GONE);
+    }
     public byte[] aaa(String filepath)
     {
         byte[] soundBytes = new byte[0];

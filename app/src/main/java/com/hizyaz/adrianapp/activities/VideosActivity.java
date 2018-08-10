@@ -26,6 +26,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.hizyaz.adrianapp.Config.Constants;
 import com.hizyaz.adrianapp.adapters.VideoAdapter;
 import com.hizyaz.adrianapp.models.SharedPrefManager;
@@ -66,7 +69,10 @@ public class VideosActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -218,7 +224,7 @@ public class VideosActivity extends AppCompatActivity
                 String line;
                 StringBuilder msg = new StringBuilder();
                 while ((line = BR.readLine()) != null) {
-                    msg.append(line + "\n");
+                    msg.append(line).append("\n");
                 }
                 AlertDialog.Builder build = new AlertDialog.Builder(VideosActivity.this);
                 build.setTitle(R.string.help);

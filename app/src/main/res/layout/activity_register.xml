@@ -69,7 +69,7 @@
                 android:focusableInTouchMode="true"
                 android:hint="@string/username_placeholder"
                 android:inputType="textPersonName"
-                android:textColorLink="@android:color/holo_orange_dark" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/editTextEmail"
@@ -78,7 +78,7 @@
                 android:focusableInTouchMode="true"
                 android:hint="@string/Email_placeholder"
                 android:inputType="textEmailAddress"
-                android:textColorLink="@android:color/holo_orange_dark" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/editTextFullname"
@@ -88,7 +88,7 @@
                 android:focusableInTouchMode="true"
                 android:hint="@string/fullname_placeholder"
                 android:inputType="textPersonName"
-                android:textColorLink="@android:color/holo_orange_dark" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/editTextContact"
@@ -98,7 +98,7 @@
                 android:focusableInTouchMode="true"
                 android:hint="@string/contact_placeholder"
                 android:inputType="textPersonName"
-                android:textColorLink="@android:color/holo_orange_dark" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/editTextPassword"
@@ -107,7 +107,7 @@
                 android:ems="10"
                 android:hint="@string/password_placeholder"
                 android:inputType="textPassword"
-                android:textColorLink="@android:color/holo_orange_dark" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/editTextConfirmPassword"
@@ -116,16 +116,16 @@
                 android:ems="10"
                 android:hint="@string/confirm_password_placeholder"
                 android:inputType="textPassword"
-                android:textColorLink="@android:color/holo_orange_dark" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <Button
                 android:id="@+id/buttonRegister"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:background="#f9911a"
+                android:background="@color/colorPrimary"
                 android:text="@string/buttonRegister"
-                android:textColor="@android:color/background_light" />
+                android:textColor="@android:color/white" />
 
             <TextView
                 android:id="@+id/textViewLogin"
@@ -135,11 +135,18 @@
                 android:gravity="center"
                 android:text="@string/textViewLogin"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="#f9911a"
+                android:textColor="@color/colorPrimary"
                 app:fontFamily="sans-serif-condensed" />
 
         </LinearLayout>
 
-
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="40dp"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />
     </LinearLayout>
 </ScrollView>

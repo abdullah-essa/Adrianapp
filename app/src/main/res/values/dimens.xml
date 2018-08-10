@@ -8,4 +8,5 @@
     <dimen name="app_bar_vertical_margin">85dp</dimen>
     <dimen name="padding">16dp</dimen>
     <dimen name="nav_header_height_custom">140dp</dimen>
+    <dimen name="padding_5dp" />
 </resources>

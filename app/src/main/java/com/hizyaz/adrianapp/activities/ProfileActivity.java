@@ -56,7 +56,7 @@ public class ProfileActivity extends AppCompatActivity {
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_back_24dp);
         actionbar.setTitle("Profile");
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xffff8800));
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
 
         progressDialog = new ProgressDialog(this);
         buttonUpdate = findViewById(R.id.buttonUpdate);

@@ -50,7 +50,7 @@
                 android:ems="10"
                 android:hint="@string/username_placeholder"
                 android:inputType="textPersonName"
-                android:textColorLink="@android:color/holo_orange_dark" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/editTextEmail"
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/Email_placeholder"
                 android:inputType="textEmailAddress"
-                android:textColorLink="@android:color/holo_orange_dark" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/editTextFullname"
@@ -68,7 +68,7 @@
                 android:focusableInTouchMode="true"
                 android:hint="@string/fullname_placeholder"
                 android:inputType="textPersonName"
-                android:textColorLink="@android:color/holo_orange_dark" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/editTextContact"
@@ -78,7 +78,7 @@
                 android:focusableInTouchMode="true"
                 android:hint="@string/contact_placeholder"
                 android:inputType="textPersonName"
-                android:textColorLink="@android:color/holo_orange_dark" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/editTextPassword"
@@ -87,7 +87,7 @@
                 android:ems="10"
                 android:hint="@string/password_placeholder"
                 android:inputType="textPassword"
-                android:textColorLink="@android:color/holo_orange_dark" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/editTextConfirmPassword"
@@ -96,13 +96,15 @@
                 android:ems="10"
                 android:hint="@string/confirm_password_placeholder"
                 android:inputType="textPassword"
-                android:textColorLink="@android:color/holo_orange_dark" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <Button
                 android:id="@+id/buttonUpdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/mdtp_white"
                 android:text="@string/buttonUpdate" />
 
         </LinearLayout>

@@ -16,6 +16,14 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical">
+        <TextView
+            android:id="@+id/textViewVideoTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:padding="5dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="normal|italic" />
         <ProgressBar
             android:id="@+id/ProgressBar"
             style="?android:attr/progressBarStyleLarge"
@@ -38,6 +46,7 @@
             android:id="@+id/layout_video_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_5dp"
             android:orientation="vertical"
             android:padding="10dp"
             android:visibility="gone">
@@ -57,7 +66,7 @@
                 android:ems="10"
                 android:hint="@string/placeholder_video_title"
                 android:inputType="text"
-                android:textColorLink="@android:color/holo_orange_dark" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -73,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/placeholder_video_emails"
                 android:inputType="textEmailAddress"
-                android:textColorLink="@android:color/holo_orange_dark" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -82,10 +91,12 @@
 
                 <Button
                     android:id="@+id/buttonPickDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="176dp"
                     android:layout_height="match_parent"
+                    android:background="@color/colorPrimaryDark"
                     android:onClick="buttonPickDate"
-                    android:text="@string/button_select_date" />
+                    android:text="@string/button_select_date"
+                    android:textColor="@color/mdtp_white" />
 
                 <EditText
                     android:id="@+id/editTextDeliveryDate"
@@ -98,20 +109,37 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/buttonUpdate"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="btn_update"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/buttonUpdate" />
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btn_cancel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="btn_cancel"
-                android:text="@string/button_cancel" />
+                <Button
+                    android:id="@+id/buttonUpdate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginEnd="@dimen/padding_5dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimaryDark"
+                    android:onClick="btn_update"
+                    android:text="@string/buttonUpdate"
+                    android:textColor="@color/mdtp_white" />
+
+                <Button
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimaryDark"
+                    android:onClick="btn_cancel"
+                    android:text="@string/button_cancel"
+                    android:textColor="@color/mdtp_white" />
+
+
+            </LinearLayout>
 
 
         </LinearLayout>
@@ -123,14 +151,7 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <TextView
-                android:id="@+id/textViewVideoTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:padding="5dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textStyle="normal|italic" />
+
 
             <VideoView
                 android:id="@+id/videoView"
@@ -143,6 +164,18 @@
                 android:layout_alignParentTop="true" />
         </RelativeLayout>
 
+        <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+            <!--android:id="@+id/footer"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
 
+            <!--<com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"-->
+                <!--android:id="@+id/adView"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--ads:adSize="SMART_BANNER"-->
+                <!--ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />-->
+
+        <!--</RelativeLayout>-->
     </LinearLayout>
 </ScrollView>
