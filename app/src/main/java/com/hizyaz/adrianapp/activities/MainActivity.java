@@ -140,10 +140,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
+                        NetworkResponse networkResponse = error.networkResponse;
+                        String errorMessage = getString(R.string.alert_unkown_error);
+                        if (networkResponse == null) {
+                            if (error.getClass().equals(TimeoutError.class)) {
+                                errorMessage = getString(R.string.alert_request_timeout);
+                            } else if (error.getClass().equals(NoConnectionError.class)) {
+                                errorMessage = getString(R.string.alert_failed_connection_to_server);
+                            }
+                        } else {
+                            String result = new String(networkResponse.data);
+                            try {
+                                JSONObject response = new JSONObject(result);
+                                String status = response.getString("status");
+                                String message = response.getString("message");
+
+                                Log.e("Error Status", status);
+                                Log.e("Error Message", message);
+
+                                if (networkResponse.statusCode == 404) {
+                                    errorMessage = getString(R.string.alert_resource_not_found);
+                                } else if (networkResponse.statusCode == 401) {
+                                    errorMessage = message + getString(R.string.stm_login_again);
+                                } else if (networkResponse.statusCode == 400) {
+                                    errorMessage = message + getString(R.string.stm_check_your_inputs);
+                                } else if (networkResponse.statusCode == 500) {
+                                    errorMessage = message + getString(R.string.stm_its_getting_wrong);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
 
                         Toast.makeText(
                                 getApplicationContext(),
-                                error.getMessage(),
+                                errorMessage,
                                 Toast.LENGTH_LONG
                         ).show();
                     }

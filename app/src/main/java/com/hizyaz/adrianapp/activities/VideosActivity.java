@@ -110,15 +110,16 @@ public class VideosActivity extends AppCompatActivity
             Toast.makeText(VideosActivity.this, R.string.alert_connection_problem, Toast.LENGTH_LONG).show();
             TextView textviewAlertNoConnection = findViewById(R.id.textviewAlertNoConnection);
             textviewAlertNoConnection.setVisibility(View.VISIBLE);
+            hideProgress();
         }
 
     }
 
     private void startAdapter()
     {
-        //creating recyclerview adapter
+        //creating recyclerView adapter
         VideoAdapter adapter = new VideoAdapter(VideosActivity.this, videoList);
-        //setting adapter to recyclerview
+        //setting adapter to recyclerView
         recyclerView.setAdapter(adapter);
     }
 

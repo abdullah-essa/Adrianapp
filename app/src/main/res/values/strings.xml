@@ -76,5 +76,6 @@
     <string name="button_cancel">Cancel</string>
     <string name="textViewAllowedQtyString">Allowed Videos to Upload :</string>
     <string name="textViewUploadedString">Uploaded Vidoes :</string>
+    <string name="uploading_video">Uploading Video ...</string>
 
 </resources>

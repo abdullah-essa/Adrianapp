@@ -7,10 +7,10 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -90,9 +90,6 @@ private static final int STORAGE_PERMISSION_CODE = 123;
 //        AdRequest adRequest = new AdRequest.Builder().build();
 //        mAdView.loadAd(adRequest);
 
-//        progressDialog = new ProgressDialog(this);
-//        progressBar = new ProgressBar(this);
-
         //initializing views
         videoView = findViewById(R.id.videoView);
         editTextTitle = findViewById(R.id.editTextTitle);
@@ -105,15 +102,7 @@ private static final int STORAGE_PERMISSION_CODE = 123;
         //if the permission is not given we will open setting to add permission
         //else app will not open
         requestStoragePermission();
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this,
-//                Manifest.permission.READ_EXTERNAL_STORAGE)
-//                != PackageManager.PERMISSION_GRANTED) {
-//            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-//                    Uri.parse("package:" + getPackageName()));
-//            finish();
-//            startActivity(intent);
-//            return;
-//        }
+
 
         //adding click listener to button
         buttonUpload.setOnClickListener(new View.OnClickListener() {
@@ -180,21 +169,13 @@ private static final int STORAGE_PERMISSION_CODE = 123;
         dpd.show(getFragmentManager(), "Datepickerdialog2");
     }
     private void requestStoragePermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-            return;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this,
-//                Manifest.permission.READ_EXTERNAL_STORAGE)
-//                != PackageManager.PERMISSION_GRANTED) {
-//
-//        }
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            //If the user has denied the permission previously your code will come to this block
-            //Here you can explain why you need this permission
-            //Explain here why you need this permission
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+            }
         }
-        //And finally ask for the permission
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
     }
     //This method will be called when the user will tap on allow or deny
     @Override
@@ -202,14 +183,15 @@ private static final int STORAGE_PERMISSION_CODE = 123;
 
         //Checking the request code of our request
         if (requestCode == STORAGE_PERMISSION_CODE) {
-
             //If permission is granted
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //Displaying a toast
                 Toast.makeText(this, "Permission granted now you can read the storage", Toast.LENGTH_LONG).show();
+                buttonUpload.setVisibility(View.VISIBLE);
             } else {
                 //Displaying another toast if permission is not granted
                 Toast.makeText(this, "Oops you just denied the permission", Toast.LENGTH_LONG).show();
+                buttonUpload.setVisibility(View.INVISIBLE);
                 requestStoragePermission();
             }
         }
@@ -268,22 +250,22 @@ private static final int STORAGE_PERMISSION_CODE = 123;
                     if (allowedFileSize(selectedPath))
                     {
                         uploadVideo();
-                        showProgress();
+                        showUploadingLayout();
                     }
                     else
                     {
-                        hideProgress();
+                        hideUploadingLayout();
                         textViewResponse.setText(R.string.alert_bigFileSize);
                     }
                 } else {
-                    hideProgress();
+                    hideUploadingLayout();
 
                     textViewResponse.setText(R.string.alert_no_file_selected);
                 }
             } catch (Exception e)
             {
                 e.printStackTrace();
-                hideProgress();
+                hideUploadingLayout();
             }
 
         }
@@ -294,7 +276,7 @@ private static final int STORAGE_PERMISSION_CODE = 123;
                 new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {
-                        hideProgress();
+                        hideUploadingLayout();
                         try {
                             SharedPrefManager.getInstance(UploadVideoActivity.this).updateUploadedVideosByUser("+");
                             JSONObject obj = new JSONObject(new String(response.data));
@@ -341,7 +323,7 @@ private static final int STORAGE_PERMISSION_CODE = 123;
                                 e.printStackTrace();
                             }
                         }
-                        hideProgress();
+                        hideUploadingLayout();
 //                        progressDialog.dismiss();
                         Toast.makeText(
                                 UploadVideoActivity.this,
@@ -392,12 +374,14 @@ private static final int STORAGE_PERMISSION_CODE = 123;
         textViewResponse.setVisibility(View.INVISIBLE);
 
     }
-    public void showProgress()
+    public void showUploadingLayout()
     {
+        findViewById(R.id.layout_video_uploading).setVisibility(View.VISIBLE);
         findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
     }
-    public void hideProgress()
+    public void hideUploadingLayout()
     {
+        findViewById(R.id.layout_video_uploading).setVisibility(View.GONE);
         findViewById(R.id.progressBar).setVisibility(View.GONE);
     }
     public byte[] aaa(String filepath)
@@ -454,7 +438,7 @@ private static final int STORAGE_PERMISSION_CODE = 123;
                 String line;
                 StringBuilder msg = new StringBuilder();
                 while ((line = BR.readLine()) != null) {
-                    msg.append(line + "\n");
+                    msg.append(line).append("\n");
                 }
                 AlertDialog.Builder build = new AlertDialog.Builder(UploadVideoActivity.this);
                 build.setTitle(R.string.help);

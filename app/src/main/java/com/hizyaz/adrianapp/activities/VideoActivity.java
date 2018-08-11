@@ -89,6 +89,9 @@ public class VideoActivity extends AppCompatActivity
         textViewVideoTitle = findViewById(R.id.textViewVideoTitle);
         editTextDeliveryDate = findViewById(R.id.editTextDeliveryDate);
 
+        layout_video_edit = findViewById(R.id.layout_video_edit);
+        layout_video_watch = findViewById(R.id.layout_video_watch);
+
 //        Log.e("Title", title);
         progressDialog = new ProgressDialog(this);
 
@@ -96,8 +99,9 @@ public class VideoActivity extends AppCompatActivity
         if (action != null && action.equals("edit"))
         {
             actionbar.setTitle("Edit Video");
-            layout_video_edit = findViewById(R.id.layout_video_edit);
+
             layout_video_edit.setVisibility(View.VISIBLE);
+            layout_video_watch.setVisibility(View.INVISIBLE);
             editTextVideoTitle = findViewById(R.id.vid_title);
             editTextVideoEmail = findViewById(R.id.editTextVideoEmail);
 
@@ -112,13 +116,13 @@ public class VideoActivity extends AppCompatActivity
             showProgress();
             actionbar.setTitle("Watching Video");
             textViewVideoTitle.setText(title);
-            layout_video_watch = findViewById(R.id.layout_video_watch);
+
             layout_video_watch.setVisibility(View.VISIBLE);
+            layout_video_edit.setVisibility(View.INVISIBLE);
 
             videoView = findViewById(R.id.videoView);
             String vid_relative_link = intentData.getExtras().getString("vid_relative_link");
 
-            //            Uri uri = Uri.parse(vid_relative_link);
             mediaController = new MediaController(this);
             videoView.setMediaController(new MediaController(this));
             mediaController.setAnchorView(videoView);
@@ -131,7 +135,6 @@ public class VideoActivity extends AppCompatActivity
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     hideProgress();
-                    //                    progressBarInvisible();
                 }
             });
         }
