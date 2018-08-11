@@ -101,7 +101,7 @@ public class VideoActivity extends AppCompatActivity
             actionbar.setTitle("Edit Video");
 
             layout_video_edit.setVisibility(View.VISIBLE);
-            layout_video_watch.setVisibility(View.INVISIBLE);
+            layout_video_watch.setVisibility(View.GONE);
             editTextVideoTitle = findViewById(R.id.vid_title);
             editTextVideoEmail = findViewById(R.id.editTextVideoEmail);
 
@@ -118,7 +118,7 @@ public class VideoActivity extends AppCompatActivity
             textViewVideoTitle.setText(title);
 
             layout_video_watch.setVisibility(View.VISIBLE);
-            layout_video_edit.setVisibility(View.INVISIBLE);
+            layout_video_edit.setVisibility(View.GONE);
 
             videoView = findViewById(R.id.videoView);
             String vid_relative_link = intentData.getExtras().getString("vid_relative_link");

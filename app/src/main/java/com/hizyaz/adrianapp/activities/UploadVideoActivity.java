@@ -427,8 +427,9 @@ private static final int STORAGE_PERMISSION_CODE = 123;
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.home) {
-//            drawer.openDrawer(GravityCompat.START);
-                return true;
+            startActivity(new Intent(this, VideosActivity.class));
+            finish();
+            return true;
         }
         if (id == R.id.menu_help) {
             try {
