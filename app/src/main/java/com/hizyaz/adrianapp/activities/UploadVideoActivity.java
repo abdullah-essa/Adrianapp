@@ -67,6 +67,7 @@ private static final int STORAGE_PERMISSION_CODE = 123;
 
     //edittext for getting the tags input
     TextView textViewResponse;
+    int uploaded_vids_by_user,allowed_uploaded_qty;
     private String selectedPath,title,deliver_date,email;
     private VideoView videoView;
     private EditText editTextTitle, editTextDeliveryDate, editTextEmail;
@@ -147,10 +148,24 @@ private static final int STORAGE_PERMISSION_CODE = 123;
                     editTextEmail.setError("Enter a valid email");
                     return;
                 }
+                if (!is_allowed_to_upload())
+                {
+                    String stm = "Allowed Videos to upload ["+allowed_uploaded_qty+"] | Videos Uploaded By You ["+allowed_uploaded_qty+"]";
+                    textViewResponse.setText(stm);
+                    textViewResponse.setVisibility(View.VISIBLE);
+                    return;
+                }
                 //if everything is ok we will open video chooser
                 chooseVideo();
             }
         });
+    }
+
+    private boolean is_allowed_to_upload() {
+        uploaded_vids_by_user = SharedPrefManager.getInstance(getApplicationContext()).getUserUploadedQty();
+        allowed_uploaded_qty = SharedPrefManager.getInstance(getApplicationContext()).getAllowedQty();
+
+        return uploaded_vids_by_user < allowed_uploaded_qty;
     }
 
     public void buttonPickDate(View view) {
@@ -251,23 +266,28 @@ private static final int STORAGE_PERMISSION_CODE = 123;
                     videoView.start();
                     textViewResponse.setText(selectedPath);
                     if (allowedFileSize(selectedPath))
+                    {
                         uploadVideo();
+                        showProgress();
+                    }
                     else
+                    {
+                        hideProgress();
                         textViewResponse.setText(R.string.alert_bigFileSize);
-
-
+                    }
                 } else {
+                    hideProgress();
+
                     textViewResponse.setText(R.string.alert_no_file_selected);
                 }
-
             } catch (Exception e)
             {
                 e.printStackTrace();
+                hideProgress();
             }
 
         }
     }
-
     private void uploadVideo() {
         //our custom volley request
         VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, Constants.UPLOAD_VIDEO_URL,
@@ -276,6 +296,7 @@ private static final int STORAGE_PERMISSION_CODE = 123;
                     public void onResponse(NetworkResponse response) {
                         hideProgress();
                         try {
+                            SharedPrefManager.getInstance(UploadVideoActivity.this).updateUploadedVideosByUser("+");
                             JSONObject obj = new JSONObject(new String(response.data));
                             Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(UploadVideoActivity.this, VideosActivity.class));
@@ -369,7 +390,7 @@ private static final int STORAGE_PERMISSION_CODE = 123;
         //adding the request to volley
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(volleyMultipartRequest);
         textViewResponse.setVisibility(View.INVISIBLE);
-        showProgress();
+
     }
     public void showProgress()
     {
@@ -439,7 +460,7 @@ private static final int STORAGE_PERMISSION_CODE = 123;
                 build.setTitle(R.string.help);
                 build.setIcon(R.mipmap.ic_launcher);
                 build.setMessage(Html.fromHtml(msg + ""));
-                build.setNegativeButton(R.string.dilog_close, new DialogInterface.OnClickListener() {
+                build.setNegativeButton(R.string.dialog_close, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         //Negative

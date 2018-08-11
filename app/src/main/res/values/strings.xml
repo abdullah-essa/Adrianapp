@@ -71,8 +71,10 @@
     <string name="label_video_emails">Emails</string>
     <string name="buttonDelete_video_desc">Delete Video Desc</string>
     <string name="title_activity_register">Registration</string>
-    <string name="dilog_close">Close</string>
+    <string name="dialog_close">Close</string>
     <string name="page_head_watching_video">You are watching</string>
     <string name="button_cancel">Cancel</string>
+    <string name="textViewAllowedQtyString">Allowed Videos to Upload :</string>
+    <string name="textViewUploadedString">Uploaded Vidoes :</string>
 
 </resources>

@@ -263,7 +263,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         build.setTitle(R.string.help);
                         build.setIcon(R.mipmap.ic_launcher);
                         build.setMessage(Html.fromHtml(msg + ""));
-                        build.setNegativeButton(R.string.dilog_close, new DialogInterface.OnClickListener() {
+                        build.setNegativeButton(R.string.dialog_close, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
                                 //Negative

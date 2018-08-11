@@ -36,13 +36,6 @@
             android:textAlignment="center"
             android:textColor="@android:color/holo_red_light" />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:progressDrawable="@color/colorPrimary"
-            android:visibility="gone" />
 
         <EditText
             android:id="@+id/editTextTitle"
@@ -69,9 +62,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:background="@color/colorPrimary"
-                android:textColor="@color/mdtp_white"
                 android:onClick="buttonPickDate"
-                android:text="@string/button_select_date" />
+                android:text="@string/button_select_date"
+                android:textColor="@color/mdtp_white" />
 
             <EditText
                 android:id="@+id/editTextDeliveryDate"
@@ -97,21 +90,44 @@
             android:text="@string/Button_upload"
             android:textColor="@color/mdtp_white" />
 
-
-        <VideoView
-            android:id="@+id/videoView"
+        <RelativeLayout
+            android:id="@+id/layout_video_uploading"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:visibility="gone" />
+            android:layout_height="match_parent"
+            android:visibility="visible">
+
+            <VideoView
+                android:id="@+id/videoView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:visibility="gone" />/>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:progressDrawable="@color/colorPrimary"
+                android:layout_alignParentLeft="true"
+                android:visibility="gone"/>
+        </RelativeLayout>
 
         <!--<com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"-->
-            <!--android:id="@+id/adView"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="bottom"-->
-            <!--android:layout_marginTop="40dp"-->
-            <!--ads:adSize="SMART_BANNER"-->
-            <!--ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />-->
+        <!--android:id="@+id/adView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:layout_marginTop="40dp"-->
+        <!--ads:adSize="SMART_BANNER"-->
+        <!--ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />-->
     </LinearLayout>
 
 </ScrollView>

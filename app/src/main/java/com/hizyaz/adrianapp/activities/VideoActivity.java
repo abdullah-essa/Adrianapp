@@ -92,7 +92,9 @@ public class VideoActivity extends AppCompatActivity
 //        Log.e("Title", title);
         progressDialog = new ProgressDialog(this);
 
-        if (action != null && action.equals("edit")) {
+
+        if (action != null && action.equals("edit"))
+        {
             actionbar.setTitle("Edit Video");
             layout_video_edit = findViewById(R.id.layout_video_edit);
             layout_video_edit.setVisibility(View.VISIBLE);
@@ -105,7 +107,9 @@ public class VideoActivity extends AppCompatActivity
 
         }
 
-        if (action != null && action.equals("watch")) {
+        if (action != null && action.equals("watch"))
+        {
+            showProgress();
             actionbar.setTitle("Watching Video");
             textViewVideoTitle.setText(title);
             layout_video_watch = findViewById(R.id.layout_video_watch);
@@ -126,10 +130,19 @@ public class VideoActivity extends AppCompatActivity
             videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
+                    hideProgress();
                     //                    progressBarInvisible();
                 }
             });
         }
+    }
+    public void showProgress()
+    {
+        findViewById(R.id.ProgressBar).setVisibility(View.VISIBLE);
+    }
+    public void hideProgress()
+    {
+        findViewById(R.id.ProgressBar).setVisibility(View.GONE);
     }
     public void get_video() {
         progressDialog.setMessage("Fetching Video ...");
@@ -369,7 +382,7 @@ public class VideoActivity extends AppCompatActivity
                 build.setTitle(R.string.help);
                 build.setIcon(R.mipmap.ic_launcher);
                 build.setMessage(Html.fromHtml(msg + ""));
-                build.setNegativeButton(R.string.dilog_close, new DialogInterface.OnClickListener() {
+                build.setNegativeButton(R.string.dialog_close, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         //Negative

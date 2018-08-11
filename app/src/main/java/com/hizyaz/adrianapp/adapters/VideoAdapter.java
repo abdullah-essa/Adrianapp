@@ -20,6 +20,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.hizyaz.adrianapp.Config.Constants;
 import com.hizyaz.adrianapp.activities.VideoActivity;
 import com.hizyaz.adrianapp.activities.VideosActivity;
+import com.hizyaz.adrianapp.models.SharedPrefManager;
 import com.hizyaz.adrianapp.models.VideoList;
 import com.hizyaz.adrianapp.utils.VolleySingleton;
 
@@ -106,6 +107,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                                     if (obj.getBoolean("response")) {
                                         // remove the item
                                         videosList.remove(list_id);
+                                        // subtract the videos qty uploaded by the user
+                                        SharedPrefManager.getInstance(mCtx).updateUploadedVideosByUser("-");
                                         // return to the VideosActivity if there is no more items in the list
                                         if (getItemCount() == 0)
                                             mCtx.startActivity(new Intent(mCtx, VideosActivity.class));

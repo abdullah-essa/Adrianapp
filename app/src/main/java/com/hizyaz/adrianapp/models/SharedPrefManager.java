@@ -15,7 +15,8 @@ public class SharedPrefManager {
     private static final String KEY_CONTACT = "contact";
     private static final String KEY_USER_EMAIL = "useremail";
     private static final String KEY_USER_ID = "userid";
-
+    private static final String KEY_USER_UPLOADED_QTY = "user_uploaded_qty";
+    private static final String KEY_ALLOWED_QTY = "allowed_qty";
 
     private SharedPrefManager(Context context) {
         mCtx = context;
@@ -29,7 +30,7 @@ public class SharedPrefManager {
         return mInstance;
     }
 
-    public void userLogin(int id, String username, String fullname, String contact, String email){
+    public void userLogin(int id, String username, String fullname, String contact, String email,int user_uploaded_qty,int allowed_qty){
 
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -39,6 +40,8 @@ public class SharedPrefManager {
         editor.putString(KEY_USERNAME, username);
         editor.putString(KEY_FULLNAME, fullname);
         editor.putString(KEY_CONTACT, contact);
+        editor.putInt(KEY_USER_UPLOADED_QTY, user_uploaded_qty);
+        editor.putInt(KEY_ALLOWED_QTY, allowed_qty);
 
         editor.apply();
 
@@ -63,6 +66,38 @@ public class SharedPrefManager {
 //        sharedPreferences.getString(KEY_USER_ID, null);
     }
 
+    public int getUserUploadedQty(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(KEY_USER_UPLOADED_QTY, 0);
+    }
+    public int getAllowedQty(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(KEY_ALLOWED_QTY, 0);
+    }
+    private void setKeyUserUploadedQty(int qty) {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putInt(KEY_USER_UPLOADED_QTY, qty);
+        editor.apply();
+    }
+    public void updateUploadedVideosByUser(String operation)
+    {
+        int uploaded_vids_by_user = getUserUploadedQty();
+        if (operation.equals("+"))
+            uploaded_vids_by_user = uploaded_vids_by_user+1;
+        else if (operation.equals("-"))
+            uploaded_vids_by_user = uploaded_vids_by_user-1;
+        setKeyUserUploadedQty(uploaded_vids_by_user);
+    }
+    public void setKeyAllowedQty(int qty) {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putInt(KEY_ALLOWED_QTY, qty);
+        editor.apply();
+    }
+
     public String getUsername(){
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(KEY_USERNAME, null);
@@ -80,4 +115,17 @@ public class SharedPrefManager {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(KEY_FULLNAME, null);
     }
+
+    public void userProfile(int user_id, String username, String fullname, String contact, String email) {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putInt(KEY_USER_ID, user_id);
+        editor.putString(KEY_USER_EMAIL, email);
+        editor.putString(KEY_USERNAME, username);
+        editor.putString(KEY_FULLNAME, fullname);
+        editor.putString(KEY_CONTACT, contact);
+        editor.apply();
+    }
+
 }

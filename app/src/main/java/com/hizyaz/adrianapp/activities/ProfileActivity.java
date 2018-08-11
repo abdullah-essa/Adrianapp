@@ -28,7 +28,6 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.hizyaz.adrianapp.Config.Constants;
-import com.hizyaz.adrianapp.models.SharedPrefManager;
 import com.hizyaz.adrianapp.utils.VolleySingleton;
 
 import org.json.JSONException;
@@ -41,9 +40,12 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.hizyaz.adrianapp.models.SharedPrefManager.getInstance;
+
 public class ProfileActivity extends AppCompatActivity {
     private EditText editTextUsername, editTextEmail, editTextPassword,editTextConfirmPassword,editTextFullname,editTextContact;
     private String username,fullname,email,contact,password,cpassword;
+    private TextView textViewUploadedQty,textViewAllowedQty;
     private ProgressDialog progressDialog;
     Button buttonUpdate;
 
@@ -67,11 +69,16 @@ public class ProfileActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.editTextPassword);
         editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
         editTextContact = findViewById(R.id.editTextContact);
+        textViewUploadedQty = findViewById(R.id.textViewUploadedQty);
+        textViewAllowedQty = findViewById(R.id.textViewAllowedQty);
 
-        editTextUsername.setText(SharedPrefManager.getInstance(this).getUsername());
-        editTextEmail.setText(SharedPrefManager.getInstance(this).getUserEmail());
-        editTextFullname.setText(SharedPrefManager.getInstance(this).getUserFullname());
-        editTextContact.setText(SharedPrefManager.getInstance(this).getUserContact());
+        textViewUploadedQty.setText(String.valueOf(getInstance(getApplicationContext()).getUserUploadedQty()));
+        textViewAllowedQty.setText(String.valueOf(getInstance(getApplicationContext()).getAllowedQty()));
+
+        editTextUsername.setText(getInstance(this).getUsername());
+        editTextEmail.setText(getInstance(this).getUserEmail());
+        editTextFullname.setText(getInstance(this).getUserFullname());
+        editTextContact.setText(getInstance(this).getUserContact());
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,13 +145,13 @@ public class ProfileActivity extends AppCompatActivity {
                 String line;
                 StringBuilder msg = new StringBuilder();
                 while ((line = BR.readLine()) != null) {
-                    msg.append(line + "\n");
+                    msg.append(line).append("\n");
                 }
                 AlertDialog.Builder build = new AlertDialog.Builder(ProfileActivity.this);
                 build.setTitle(R.string.help);
                 build.setIcon(R.mipmap.ic_launcher);
                 build.setMessage(Html.fromHtml(msg + ""));
-                build.setNegativeButton(R.string.dilog_close, new DialogInterface.OnClickListener() {
+                build.setNegativeButton(R.string.dialog_close, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         //Negative
@@ -157,7 +164,7 @@ public class ProfileActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.menu_logout) {
-            SharedPrefManager.getInstance(getApplicationContext()).logout();
+            getInstance(getApplicationContext()).logout();
             startActivity(new Intent(this, MainActivity.class));
             finish();
             return true;
@@ -183,9 +190,9 @@ public class ProfileActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
                             if (obj.getBoolean("response"))
                             {
-                                int user_id = Integer.parseInt(SharedPrefManager.getInstance(getApplicationContext()).getUserid());
-                                SharedPrefManager.getInstance(getApplicationContext())
-                                        .userLogin(user_id,username,fullname,contact,email);
+                                int user_id = Integer.parseInt(getInstance(getApplicationContext()).getUserid());
+                                getInstance(getApplicationContext())
+                                        .userProfile(user_id,username,fullname,contact,email);
                             }
                             else
                             {
@@ -245,7 +252,7 @@ public class ProfileActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 Log.e("email",email);
-                params.put("id", SharedPrefManager.getInstance(getApplicationContext()).getUserid());
+                params.put("id", getInstance(getApplicationContext()).getUserid());
                 params.put("username", username);
                 params.put("email", email);
                 params.put("fname", fullname);

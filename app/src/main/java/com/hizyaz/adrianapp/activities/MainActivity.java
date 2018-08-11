@@ -118,7 +118,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                 obj.getString("username"),
                                                 obj.getString("fullname"),
                                                 obj.getString("contact"),
-                                                obj.getString("email")
+                                                obj.getString("email"),
+                                                obj.getInt("user_uploaded_qty"),
+                                                obj.getInt("allowed_qty")
                                         );
                                 startActivity(new Intent(MainActivity.this, VideosActivity.class));
                                 finish();
